@@ -1,5 +1,7 @@
 {
   "name": "Rhemaku",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "react"
 }
