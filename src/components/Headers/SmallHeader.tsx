@@ -7,9 +7,9 @@ interface Props {
 
 const SmallHeader: React.FC<Props> = (props: Props) => {
   return (
-    <IonHeader collapse="condense">
+    <IonHeader>
       <IonToolbar color="primary">
-        <IonTitle size="small">{props.title}</IonTitle>
+        <IonTitle size="large">{props.title}</IonTitle>
       </IonToolbar>
     </IonHeader>
   );
