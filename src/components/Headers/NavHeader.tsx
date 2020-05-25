@@ -11,7 +11,7 @@ interface Props {
   title: string;
 }
 
-const LargeHeader: React.FC<Props> = (props: Props) => {
+const NavHeader: React.FC<Props> = (props: Props) => {
   return (
     <IonHeader collapse="condense">
       <IonToolbar>
@@ -24,4 +24,4 @@ const LargeHeader: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default LargeHeader;
+export default NavHeader;
