@@ -41,6 +41,10 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
+import Signup from "./pages/Auth/Signup";
+import Login from "./pages/Auth/Login";
+import ForgotPassword from "./pages/Auth/ForgotPassword";
+import EditProfile from "./pages/Auth/EditProfile";
 
 const App: React.FC = () => (
   <IonApp>
@@ -52,6 +56,15 @@ const App: React.FC = () => (
           <Route path="/shuffle" component={Shuffle} exact={true} />
           <Route path="/search" component={Search} exact={true} />
           <Route path="/profile" component={Profile} exact={true} />
+          <Route path="/EditProfile" component={EditProfile} exact={true} />
+          <Route path="/register" component={Signup} exact={true} />
+          <Route path="/login" component={Login} exact={true} />
+          <Route
+            path="/forgotpassword"
+            component={ForgotPassword}
+            exact={true}
+          />
+
           <Route exact path="/" render={() => <Redirect to="/home" />} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
