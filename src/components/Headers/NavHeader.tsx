@@ -14,8 +14,8 @@ interface Props {
 const NavHeader: React.FC<Props> = (props: Props) => {
   return (
     <IonHeader collapse="condense">
-      <IonToolbar>
-        <IonButton>
+      <IonToolbar color="primary">
+        <IonButton slot="start">
           <IonBackButton defaultHref="/" />
         </IonButton>
         <IonTitle>{props.title}</IonTitle>
