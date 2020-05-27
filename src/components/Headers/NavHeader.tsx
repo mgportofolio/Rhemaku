@@ -1,11 +1,11 @@
+import React from "react";
 import {
   IonHeader,
   IonTitle,
   IonToolbar,
-  IonButton,
   IonBackButton,
+  IonButtons,
 } from "@ionic/react";
-import React from "react";
 
 interface Props {
   title: string;
@@ -13,11 +13,11 @@ interface Props {
 
 const NavHeader: React.FC<Props> = (props: Props) => {
   return (
-    <IonHeader collapse="condense">
+    <IonHeader>
       <IonToolbar color="primary">
-        <IonButton slot="start">
+        <IonButtons slot="start">
           <IonBackButton defaultHref="/" />
-        </IonButton>
+        </IonButtons>
         <IonTitle>{props.title}</IonTitle>
       </IonToolbar>
     </IonHeader>
