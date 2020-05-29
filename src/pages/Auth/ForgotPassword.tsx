@@ -34,13 +34,15 @@ const ForgotPassword: React.FC<any> = (props: any) => {
 
   async function authenticateUser() {
     const email = values;
+    setBusy(true);
     try {
-      setBusy(true);
       await firebase.resetPassword(email);
-      toast("You have signed up successfully");
+      toast(
+        "Link for reset password has been send to your email. Please check your email"
+      );
       props.history.push("/");
     } catch (err) {
-      console.error("Authentication Error", err);
+      console.error("Reset Password Failed!", err);
       toast(err.message);
     } finally {
       setBusy(false);

@@ -36,13 +36,13 @@ const Login: React.FC<any> = (props: any) => {
 
   async function authenticateUser() {
     const { email, password } = values;
+    setBusy(true);
     try {
-      setBusy(true);
       await firebase.login(email, password);
-      toast("You have signed up successfully");
+      toast("You have Login successfully");
       props.history.push("/");
     } catch (err) {
-      console.error("Authentication Error", err);
+      console.error("Authentication Error! Login Failed!", err);
       toast(err.message);
     } finally {
       setBusy(false);
