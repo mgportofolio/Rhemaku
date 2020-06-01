@@ -49,6 +49,13 @@ const Login: React.FC<any> = (props: any) => {
     }
   }
 
+  function handleKeyPress(event: any) {
+    if (event.key === "Enter") {
+      const { email, password } = values;
+      handleSubmit();
+    }
+  }
+
   return (
     <IonPage>
       <NavHeader title="Login" />
@@ -71,6 +78,7 @@ const Login: React.FC<any> = (props: any) => {
             type="password"
             value={values.password}
             onIonChange={handleChange}
+            onKeyPress={handleKeyPress}
             required
           ></IonInput>
         </IonItem>

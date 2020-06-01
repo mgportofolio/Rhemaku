@@ -70,7 +70,7 @@ const Profile: React.FC<any> = (props: any) => {
               <IonCol>
                 <IonButton
                   expand="block"
-                  routerLink={"/edit-profile"}
+                  routerLink={"/editProfile"}
                   color="primary"
                   fill="outline"
                 >
@@ -92,10 +92,11 @@ const Profile: React.FC<any> = (props: any) => {
               <IonCol>
                 <IonButton
                   expand="block"
-                  routerLink={"/register"}
+                  routerLink={"/login"}
+                  shape="round"
                   color="primary"
                 >
-                  Sign Up
+                  Login
                 </IonButton>
               </IonCol>
             </IonRow>
@@ -103,10 +104,12 @@ const Profile: React.FC<any> = (props: any) => {
               <IonCol>
                 <IonButton
                   expand="block"
-                  routerLink={"/login"}
-                  color="secondary"
+                  routerLink={"/register"}
+                  shape="round"
+                  fill="outline"
+                  color="primary"
                 >
-                  Login
+                  Sign Up
                 </IonButton>
               </IonCol>
             </IonRow>
