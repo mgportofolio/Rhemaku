@@ -46,52 +46,61 @@ import Login from "./pages/Auth/Login";
 import ForgotPassword from "./pages/Auth/ForgotPassword";
 import EditProfile from "./pages/Auth/EditProfile";
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonTabs>
-        <IonRouterOutlet>
-          <Route path="/home" component={Home} exact={true} />
-          <Route path="/post" component={Post} exact={true} />
-          <Route path="/shuffle" component={Shuffle} exact={true} />
-          <Route path="/search" component={Search} exact={true} />
-          <Route path="/profile" component={Profile} exact={true} />
-          <Route path="/EditProfile" component={EditProfile} exact={true} />
-          <Route path="/register" component={Signup} exact={true} />
-          <Route path="/login" component={Login} exact={true} />
-          <Route
-            path="/forgotpassword"
-            component={ForgotPassword}
-            exact={true}
-          />
+import useAuth from "../src/hooks/useAuth";
+import UserContext from "../src/context/UserContext";
 
-          <Route exact path="/" render={() => <Redirect to="/home" />} />
-        </IonRouterOutlet>
-        <IonTabBar slot="bottom">
-          <IonTabButton tab="home" href="/home">
-            <IonIcon icon={homeOutline}></IonIcon>
-            <IonLabel>Home</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="post" href="/post">
-            <IonIcon icon={documentTextOutline}></IonIcon>
-            <IonLabel>Post</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="shuffle" href="/shuffle">
-            <IonIcon icon={shuffleOutline}></IonIcon>
-            <IonLabel>Shuffle</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="search" href="/search">
-            <IonIcon icon={searchOutline}></IonIcon>
-            <IonLabel>Search</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="profile" href="/profile">
-            <IonIcon icon={personCircleOutline}></IonIcon>
-            <IonLabel>Profile</IonLabel>
-          </IonTabButton>
-        </IonTabBar>
-      </IonTabs>
-    </IonReactRouter>
-  </IonApp>
-);
+const App: React.FC = () => {
+  const { authUser, setAuthUser } = useAuth();
+  //console.log(authUser, setAuthUser);
+  return (
+    <IonApp>
+      <IonReactRouter>
+        <UserContext.Provider value={[authUser, setAuthUser]}>
+          <IonTabs>
+            <IonRouterOutlet>
+              <Route path="/home" component={Home} exact={true} />
+              <Route path="/post" component={Post} exact={true} />
+              <Route path="/shuffle" component={Shuffle} exact={true} />
+              <Route path="/search" component={Search} exact={true} />
+              <Route path="/profile" component={Profile} exact={true} />
+              <Route path="/EditProfile" component={EditProfile} exact={true} />
+              <Route path="/register" component={Signup} exact={true} />
+              <Route path="/login" component={Login} exact={true} />
+              <Route
+                path="/forgotpassword"
+                component={ForgotPassword}
+                exact={true}
+              />
+
+              <Route exact path="/" render={() => <Redirect to="/home" />} />
+            </IonRouterOutlet>
+            <IonTabBar slot="bottom">
+              <IonTabButton tab="home" href="/home">
+                <IonIcon icon={homeOutline}></IonIcon>
+                <IonLabel>Home</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="post" href="/post">
+                <IonIcon icon={documentTextOutline}></IonIcon>
+                <IonLabel>Post</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="shuffle" href="/shuffle">
+                <IonIcon icon={shuffleOutline}></IonIcon>
+                <IonLabel>Shuffle</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="search" href="/search">
+                <IonIcon icon={searchOutline}></IonIcon>
+                <IonLabel>Search</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="profile" href="/profile">
+                <IonIcon icon={personCircleOutline}></IonIcon>
+                <IonLabel>Profile</IonLabel>
+              </IonTabButton>
+            </IonTabBar>
+          </IonTabs>
+        </UserContext.Provider>
+      </IonReactRouter>
+    </IonApp>
+  );
+};
 
 export default App;

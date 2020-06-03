@@ -36,16 +36,23 @@ const Login: React.FC<any> = (props: any) => {
 
   async function authenticateUser() {
     const { email, password } = values;
+    setBusy(true);
     try {
-      setBusy(true);
       await firebase.login(email, password);
-      toast("You have signed up successfully");
+      toast("You have Login successfully");
       props.history.push("/");
     } catch (err) {
-      console.error("Authentication Error", err);
+      console.error("Authentication Error! Login Failed!", err);
       toast(err.message);
     } finally {
       setBusy(false);
+    }
+  }
+
+  function handleKeyPress(event: any) {
+    if (event.key === "Enter") {
+      const { email, password } = values;
+      handleSubmit();
     }
   }
 
@@ -71,6 +78,7 @@ const Login: React.FC<any> = (props: any) => {
             type="password"
             value={values.password}
             onIonChange={handleChange}
+            onKeyPress={handleKeyPress}
             required
           ></IonInput>
         </IonItem>
