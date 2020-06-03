@@ -14,6 +14,7 @@ function useForm(
   React.useEffect(() => {
     if (isSubmitting) {
       const noErrors = Object.keys(errors).length === 0;
+      console.log(noErrors);
       if (noErrors) {
         action();
         setValues(initialState);
