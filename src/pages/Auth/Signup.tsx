@@ -10,6 +10,7 @@ import {
   IonCol,
   IonButton,
   IonLoading,
+  IonGrid,
 } from "@ionic/react";
 
 import { toast } from "../../helpers/toast";
@@ -17,6 +18,8 @@ import useForm from "../../hooks/useForm";
 import firebase from "../../firebase/firebase";
 import validateAuth from "../../validators/validateAuth";
 import { REGISTRATION } from "../../enum/authenticationEnum";
+import SignupComponent from "../../components/Authentication/SignupComponent";
+import BaseComponent from "../../components/Commons/BaseComponent";
 
 const INITIAL_STATE = {
   name: "",
@@ -49,54 +52,27 @@ const Signup: React.FC<any> = (props: any) => {
     }
   }
 
+  function handleKeyPress(event: any) {
+    if (event.key === "Enter") {
+      const { email, password } = values;
+      handleSubmit();
+    }
+  }
+
   return (
     <IonPage>
       <NavHeader title="Sign Up" />
       <IonLoading message={"Please wait..."} isOpen={busy} />
       <IonContent>
-        <IonItem lines="full">
-          <IonLabel position="floating">Username</IonLabel>
-          <IonInput
-            name="name"
-            type="text"
-            value={values.name}
-            onIonChange={handleChange}
-            required
-          ></IonInput>
-        </IonItem>
-        <IonItem lines="full">
-          <IonLabel position="floating">Email</IonLabel>
-          <IonInput
-            name="email"
-            type="text"
-            value={values.email}
-            onIonChange={handleChange}
-            required
-          ></IonInput>
-        </IonItem>
-        <IonItem lines="full">
-          <IonLabel position="floating">Password</IonLabel>
-          <IonInput
-            name="password"
-            type="password"
-            value={values.password}
-            onIonChange={handleChange}
-            required
-          ></IonInput>
-        </IonItem>
-        <IonRow>
-          <IonCol>
-            <IonButton
-              type="submit"
-              color="primary"
-              expand="block"
-              onClick={handleSubmit}
-              disabled={isSubmitting}
-            >
-              Sign Up
-            </IonButton>
-          </IonCol>
-        </IonRow>
+        <BaseComponent>
+          <SignupComponent
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+            isSubmitting={isSubmitting}
+            values={values}
+            handleKeyPress={handleKeyPress}
+          />
+        </BaseComponent>
       </IonContent>
     </IonPage>
   );

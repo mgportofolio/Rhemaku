@@ -1,9 +1,6 @@
 import {
   IonContent,
-  IonHeader,
   IonPage,
-  IonTitle,
-  IonToolbar,
   IonCard,
   IonCardContent,
   IonList,
@@ -22,7 +19,9 @@ import firebase from "../firebase/firebase";
 import UserContext from "../context/UserContext";
 import SmallHeader from "../components/Headers/SmallHeader";
 import LargeHeader from "../components/Headers/LargeHeader";
+import AuthComponent from "../components/Authentication/AuthComponent";
 import { personCircleOutline, mailOutline } from "ionicons/icons";
+import BaseComponent from "../components/Commons/BaseComponent";
 
 const Profile: React.FC<any> = (props: any) => {
   const user = React.useContext(UserContext);
@@ -87,33 +86,9 @@ const Profile: React.FC<any> = (props: any) => {
             </IonRow>
           </>
         ) : (
-          <IonGrid>
-            <IonRow>
-              <IonCol>
-                <IonButton
-                  expand="block"
-                  routerLink={"/login"}
-                  shape="round"
-                  color="primary"
-                >
-                  Login
-                </IonButton>
-              </IonCol>
-            </IonRow>
-            <IonRow>
-              <IonCol>
-                <IonButton
-                  expand="block"
-                  routerLink={"/register"}
-                  shape="round"
-                  fill="outline"
-                  color="primary"
-                >
-                  Sign Up
-                </IonButton>
-              </IonCol>
-            </IonRow>
-          </IonGrid>
+          <BaseComponent>
+            <AuthComponent />
+          </BaseComponent>
         )}
       </IonContent>
     </IonPage>
