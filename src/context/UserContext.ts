@@ -1,5 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
-import { User } from "firebase";
+import React from "react";
 
 const UserContext = React.createContext<any>(null);
 

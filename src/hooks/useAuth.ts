@@ -1,6 +1,5 @@
 import React from "react";
 import firebase from "../firebase/firebase";
-import { User } from "firebase";
 
 function useAuth() {
   const [authUser, setAuthUser] = React.useState<any>(null);
