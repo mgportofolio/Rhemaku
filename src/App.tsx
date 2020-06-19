@@ -18,7 +18,7 @@ import {
   searchOutline,
 } from "ionicons/icons";
 import Home from "./pages/Home";
-import Post from "./pages/Post";
+import Write from "./pages/Write";
 import Shuffle from "./pages/Shuffle";
 import Search from "./pages/Search";
 import Profile from "./pages/Profile";
@@ -48,6 +48,7 @@ import EditProfile from "./pages/Auth/EditProfile";
 
 import useAuth from "../src/hooks/useAuth";
 import UserContext from "../src/context/UserContext";
+import Post from "./pages/Post";
 
 const App: React.FC = () => {
   const { authUser, setAuthUser } = useAuth();
@@ -59,7 +60,8 @@ const App: React.FC = () => {
           <IonTabs>
             <IonRouterOutlet>
               <Route path="/home" component={Home} exact={true} />
-              <Route path="/post" component={Post} exact={true} />
+              <Route path="/write" component={Write} exact={true} />
+              <Route path="/post/:postId" component={Post} />
               <Route path="/shuffle" component={Shuffle} exact={true} />
               <Route path="/search" component={Search} exact={true} />
               <Route path="/profile" component={Profile} exact={true} />
@@ -79,9 +81,9 @@ const App: React.FC = () => {
                 <IonIcon icon={homeOutline}></IonIcon>
                 <IonLabel>Home</IonLabel>
               </IonTabButton>
-              <IonTabButton tab="post" href="/post">
+              <IonTabButton tab="write" href="/write">
                 <IonIcon icon={documentTextOutline}></IonIcon>
-                <IonLabel>Post</IonLabel>
+                <IonLabel>Write</IonLabel>
               </IonTabButton>
               <IonTabButton tab="shuffle" href="/shuffle">
                 <IonIcon icon={shuffleOutline}></IonIcon>
