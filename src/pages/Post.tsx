@@ -1,147 +1,238 @@
+import React from "react";
+import UserContext from "../context/UserContext";
+import firebase from "../firebase";
 import {
-  IonContent,
   IonPage,
-  IonItem,
-  IonLabel,
-  IonInput,
-  IonRow,
-  IonCol,
+  IonContent,
   IonButton,
-  IonList,
   IonCardContent,
   IonCard,
-  IonRouterLink,
-  IonTextarea,
+  IonIcon,
+  IonText,
+  IonButtons,
 } from "@ionic/react";
-import React from "react";
-import "./Home.css";
-import SmallHeader from "../components/Headers/SmallHeader";
-import LargeHeader from "../components/Headers/LargeHeader";
-import UserContext from "../context/UserContext";
-import useForm from "../hooks/useForm";
-import firebase from "../firebase/firebase";
-import validatePost from "../validators/validatePost";
-import { RHEMA } from "../enum/postEnum";
-
-const INITIAL_STATE = {
-  title: "",
-  verse: "",
-  rhema: "",
-};
+import NavHeader from "../components/Headers/NavHeader";
+import {
+  closeCircleOutline,
+  checkmarkCircleOutline,
+  chatbubbleOutline,
+} from "ionicons/icons";
+import PostDetail from "../components/Post/PostDetail";
+import TopBaseComponent from "../components/Commons/TopBaseComponent";
+import CommentModal from "../components/Modals/CommentModal";
+import { toast } from "../helpers/toast";
+import PostComment from "../components/Post/PostComment";
 
 const Post: React.FC<any> = (props: any) => {
   const user = React.useContext(UserContext);
-  const { handleSubmit, handleChange, values } = useForm(
-    INITIAL_STATE,
-    validatePost,
-    handlePost,
-    RHEMA
-  );
-  function handlePost() {
+  const [post, setPost] = React.useState<any>(null);
+  const [showModal, setShowModal] = React.useState<boolean>(false);
+  const postId = props.match.params.postId;
+  const postRef = firebase.db.collection("posts").doc(postId);
+  var title: string = "Post";
+  var canDelete: boolean = false;
+
+  function postedByAuthor(post: any) {
+    if (user[0] == null) {
+      return false;
+    }
+    return post && user[0].uid === post.postedBy.id;
+  }
+
+  React.useEffect(() => {
+    getPost();
+  }, [postId]);
+
+  function getPost() {
+    postRef.get().then((doc) => {
+      setPost({ ...doc.data(), id: doc.id });
+    });
+  }
+
+  function handleAddVote() {
     if (!user[0]) {
-      props.history.push("/");
+      toast("You must login first to Upvote");
     } else {
-      console.log("val " + values);
-      const { title, verse, rhema } = values;
-      const newPost = {
-        title,
-        verse,
-        rhema,
-        postedBy: {
-          id: user[0].uid,
-          name: user[0].displayName,
-        },
-        voteCount: 1,
-        category: {
-          id: 1,
-          name: RHEMA,
-        },
-        votes: [],
-        comments: [],
-        created: Date.now(),
-      };
-      firebase.db.collection("posts").add(newPost);
-      props.history.push("/");
+      postRef.get().then((doc) => {
+        if (doc.exists) {
+          const previousVotes = doc.data()?.votes;
+          var isVoted = previousVotes.find(
+            (vote: any) => vote.votedBy.id === user[0].uid
+          );
+          if (isVoted) {
+            toast("You already voted");
+          } else {
+            const vote = {
+              votedBy: { id: user[0].uid, name: user[0].displayName },
+            };
+            const updatedVotes = [...previousVotes, vote];
+            const voteCount = updatedVotes.length;
+            postRef.update({ votes: updatedVotes, voteCount });
+            setPost((prevState: any) => ({
+              ...prevState,
+              votes: updatedVotes,
+              voteCount: voteCount,
+            }));
+          }
+        }
+      });
     }
   }
+
+  function handleOpenModal() {
+    if (!user[0]) {
+      toast("You must login first before comment");
+    } else {
+      setShowModal(true);
+    }
+  }
+
+  function handleCloseModal() {
+    setShowModal(false);
+  }
+
+  function handleAddComment(commentText: string) {
+    console.log(commentText);
+    if (!user[0]) {
+      toast("You must login first before comment");
+    } else {
+      postRef.get().then((doc: any) => {
+        if (doc.exists) {
+          const previousComments = doc.data().comments;
+          const newComment = {
+            postedBy: { id: user[0].uid, name: user[0].displayName },
+            created: Date.now(),
+            text: commentText,
+          };
+          const updatedComments = [...previousComments, newComment];
+          postRef.update({ comments: updatedComments });
+          setPost((prevState: any) => ({
+            ...prevState,
+            comments: updatedComments,
+          }));
+        }
+      });
+      setShowModal(false);
+    }
+  }
+
+  function handleDeletePost() {
+    postRef
+      .delete()
+      .then(() => {
+        console.log(`Document with ID ${postId} has been deleted`);
+      })
+      .catch((err: any) => {
+        console.error("Error while deleting document", err);
+      });
+    props.history.push("/");
+  }
+
+  if (post != null) {
+    title += " by " + post.postedBy.name;
+    canDelete = post && postedByAuthor(post);
+  }
+
   return (
     <IonPage>
-      <SmallHeader title="Rhemaku - Post" />
-      <IonContent fullscreen>
-        <LargeHeader title="Rhemaku - Post" />
-        {user[0] ? (
-          <IonCard>
-            <IonCardContent>
-              <IonList lines="none">
-                <IonItem lines="full">
-                  <IonLabel position="floating">Judul</IonLabel>
-                  <IonInput
-                    name="title"
-                    value={values.title}
-                    type="text"
-                    onIonChange={handleChange}
-                    required
-                  ></IonInput>
-                </IonItem>
-                <IonItem lines="full">
-                  <IonLabel position="floating">Ayat</IonLabel>
-                  <IonTextarea
-                    name="verse"
-                    value={values.verse}
-                    onIonChange={handleChange}
-                    rows={3}
-                    required
-                  ></IonTextarea>
-                </IonItem>
-                <IonItem lines="full">
-                  <IonLabel position="floating">Rhema</IonLabel>
-                  <IonTextarea
-                    name="rhema"
-                    value={values.rhema}
-                    onIonChange={handleChange}
-                    rows={7}
-                    required
-                  ></IonTextarea>
-                </IonItem>
-                <IonRow>
-                  <IonCol>
+      <NavHeader
+        title={title}
+        option={canDelete}
+        icon={closeCircleOutline}
+        action={handleDeletePost}
+      />
+      <IonContent>
+        <CommentModal
+          isOpen={showModal}
+          title="New Comment"
+          sendAction={handleAddComment}
+          closeAction={handleCloseModal}
+          comment={""}
+        ></CommentModal>
+        {post && (
+          <>
+            <TopBaseComponent>
+              <PostDetail post={post} />
+              <IonCard>
+                <IonCardContent>
+                  <IonButton
+                    onClick={() => {
+                      handleAddVote();
+                    }}
+                    size="small"
+                    color="tertiary"
+                  >
+                    <IonIcon
+                      icon={checkmarkCircleOutline}
+                      style={{ verticalAlign: "middle" }}
+                    />
+                    <IonText style={{ verticalAlign: "middle" }}>
+                      &nbsp;Upvote
+                    </IonText>
+                  </IonButton>
+                  &nbsp;
+                  <IonButton
+                    onClick={() => {
+                      handleOpenModal();
+                    }}
+                    size="small"
+                  >
+                    <IonIcon
+                      icon={chatbubbleOutline}
+                      style={{ verticalAlign: "middle" }}
+                    />
+                    &nbsp;Give Comment
+                  </IonButton>
+                  {/* <IonButtons>
                     <IonButton
-                      type="submit"
-                      color="primary"
-                      expand="block"
-                      onClick={handleSubmit}
+                      onClick={() => {
+                        handleAddVote();
+                      }}
+                      size="small"
                     >
-                      Post
+                      <IonIcon
+                        icon={checkmarkCircleOutline}
+                        style={{ verticalAlign: "middle" }}
+                      />
+                      <IonText style={{ verticalAlign: "middle" }}></IonText>
                     </IonButton>
-                  </IonCol>
-                </IonRow>
-              </IonList>
-            </IonCardContent>
-          </IonCard>
-        ) : (
-          <IonCard>
-            <IonCardContent>
-              <IonList lines="none">
-                <IonRow>
-                  <IonCol class="ion-text-center ion-padding-vertical">
-                    <IonLabel position="floating">
-                      <h1>
-                        Authenticated User Required! Please Signup or Signin
-                        first!
-                      </h1>
-                    </IonLabel>
-                  </IonCol>
-                </IonRow>
-                <IonRow>
-                  <IonCol class="ion-text-center ion-padding-vertical">
-                    <IonRouterLink routerLink={"/profile"}>
-                      <h2>Signup or Signin</h2>
-                    </IonRouterLink>
-                  </IonCol>
-                </IonRow>
-              </IonList>
-            </IonCardContent>
-          </IonCard>
+                    <IonButton
+                      onClick={() => {
+                        handleOpenModal();
+                      }}
+                      size="small"
+                    >
+                      <IonIcon
+                        icon={chatbubbleOutline}
+                        style={{ verticalAlign: "middle" }}
+                      />
+                    </IonButton>
+                  </IonButtons> */}
+                </IonCardContent>
+              </IonCard>
+
+              {/* <div
+                className="ion-padding-vertical ion-text-wrap"
+                style={{ paddingLeft: "10px", paddingRight: "10px" }}
+              >
+                <strong style={{ fontSize: "1rem", opacity: "1" }}>
+                  Comment(s)
+                </strong>
+              </div> */}
+
+              {post.comments.map((comment: any, index: number) => {
+                var url = `/post/${post.id}`;
+                return (
+                  <PostComment
+                    post={post}
+                    comment={comment}
+                    key={index}
+                    setPost={setPost}
+                  />
+                );
+              })}
+            </TopBaseComponent>
+          </>
         )}
       </IonContent>
     </IonPage>

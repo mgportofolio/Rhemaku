@@ -25,7 +25,6 @@ import BaseComponent from "../components/Commons/BaseComponent";
 
 const Profile: React.FC<any> = (props: any) => {
   const user = React.useContext(UserContext);
-  console.log(user);
   async function logout() {
     try {
       await firebase.logout();

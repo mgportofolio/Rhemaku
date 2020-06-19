@@ -20,8 +20,6 @@ import { toast } from "../../helpers/toast";
 
 const EditProfile: React.FC<any> = (props: any) => {
   const [user, setUser] = React.useContext(UserContext);
-  console.log("a:" + UserContext.Consumer);
-  console.log(user);
   const INITIAL_STATE = {
     name: user && user.displayName,
     email: user && user.email,
