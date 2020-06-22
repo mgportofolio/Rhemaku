@@ -31,10 +31,12 @@ const PostList: React.FC<any> = (props: any) => {
     });
     setPosts(posts);
   }
+
   return (
     <TopBaseComponent>
       {posts.map((post: any, index: number) => {
         var url = `/post/${post.id}`;
+        console.log(index);
         return (
           <PostItem
             key={post.id}

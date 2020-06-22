@@ -24,7 +24,7 @@ const PostItem: React.FC<any> = (props: any) => {
         <IonList lines="none">
           <IonItem>
             <IonBadge style={{ verticalAlign: "middle" }} slot="start">
-              {props.index && props.showCount}
+              {props.index && props.showCount ? props.index : ""}
             </IonBadge>
             <IonLabel>
               <p
